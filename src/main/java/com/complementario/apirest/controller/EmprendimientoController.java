@@ -2,6 +2,7 @@ package com.complementario.apirest.controller;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import com.complementario.apirest.entity.Emprendimiento;
@@ -24,22 +25,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class EmprendimientoController {
-
-    EmprendimientoRepository emprendimientoRepository;
-    UsuarioRepository usuarioRepository;
-
+    private UsuarioRepository usuarioRepository;
+    private EmprendimientoRepository emprendimientoRepository;
+    
+    public EmprendimientoController(EmprendimientoRepository emprendimientoRepository, UsuarioRepository  usuarioRepository ){
+        this.emprendimientoRepository = emprendimientoRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
     // Alta de Emprendimientos
 
     @PostMapping("/usuarios/{id}/emprendimientos")
     public ResponseEntity<?> crearEmprendimiento(@PathVariable("id") Long id,
             @RequestBody @Valid Emprendimiento emprendimiento) {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+        emprendimiento.setUsuario(usuario);
 
-        Usuario usuario = usuarioRepository.getById(id);
-        Emprendimiento emprendimiento1 = emprendimientoRepository.findById(id).get();
-        emprendimiento1.setUsuario(usuario);
-
-        return new ResponseEntity<>(emprendimientoRepository.save(emprendimiento1), HttpStatus.CREATED);
+        return new ResponseEntity<>(emprendimientoRepository.save(emprendimiento), HttpStatus.CREATED);
     }
+        // Emprendimiento emprendimientoExistente = emprendimientoRepository.findById(id);
+        // Emprendimiento emprendimiento1 = emprendimientoRepository.findById(id).get();
+
+        // return new ResponseEntity<>(emprendimientoRepository.save(emprendimiento1), HttpStatus.CREATED);
+    // }
 
     // #1 Buscar si el emprendimiento ya no existe
     // #2 Buscar el usuario con su repository
@@ -68,7 +75,7 @@ public class EmprendimientoController {
     @RequestMapping(value = "/emprendimientos/{id}", method = RequestMethod.PUT)
     public Emprendimiento modificarEmprendimiento(@PathVariable("id") Long id,
             @RequestBody @Valid Emprendimiento emprendimiento) {
-        Emprendimiento emprendimientoExistente = emprendimientoRepository.findById(id).get();
+        Emprendimiento emprendimientoExistente = emprendimientoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Emprendimiento no encontrado"));
         emprendimientoExistente.setNombreEmprendimiento(emprendimiento.getNombreEmprendimiento());
         emprendimientoExistente.setDescripcionEmprendimiento(emprendimiento.getDescripcionEmprendimiento());
         emprendimientoExistente.setContenidoEmprendimiento(emprendimiento.getContenidoEmprendimiento());

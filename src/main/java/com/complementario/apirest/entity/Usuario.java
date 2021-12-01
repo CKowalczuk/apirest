@@ -1,10 +1,11 @@
 package com.complementario.apirest.entity;
 
-import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "usuarios")
@@ -23,34 +25,34 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger Id;
+    private Long Id;
     private String nombre;
     private String apellido;
-    private Date fechaAlta;
-    
+
+    @CreationTimestamp
+    private LocalDateTime fechaAlta;
+
     @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
     private String email;
-    
+
     private String password;
     private String ciudad;
     private String provincia;
     private String país;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Emprendimiento> emprendimiento = new ArrayList<>();
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private UsuarioEnum tipo;
 
-    @OneToMany
-    private List<Emprendimiento> emprendimiento = new ArrayList<>();
-    
-    @OneToMany
-    private List<Evento> evento = new ArrayList<>();
- 
     public Usuario() {
     }
 
-    public Usuario(BigInteger id, String nombre, String apellido, Date fechaAlta, String email, String password,
-            String ciudad, String provincia, String país, UsuarioEnum tipo) {
+    public Usuario(Long id, String nombre, String apellido, LocalDateTime fechaAlta,
+            @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$") String email,
+            String password, String ciudad, String provincia, String país, List<Emprendimiento> emprendimiento,
+            @NotNull UsuarioEnum tipo) {
         Id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -60,14 +62,15 @@ public class Usuario {
         this.ciudad = ciudad;
         this.provincia = provincia;
         this.país = país;
+        this.emprendimiento = emprendimiento;
         this.tipo = tipo;
     }
 
-    public BigInteger getId() {
+    public Long getId() {
         return Id;
     }
 
-    public void setId(BigInteger id) {
+    public void setId(Long id) {
         Id = id;
     }
 
@@ -86,13 +89,21 @@ public class Usuario {
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-
-    public Date getFechaAlta() {
+    
+    public LocalDateTime getFechaAlta() {
         return fechaAlta;
     }
 
-    public void setFechaAlta(Date fechaAlta) {
+    public void setFechaAlta(LocalDateTime fechaAlta) {
         this.fechaAlta = fechaAlta;
+    }
+
+    public List<Emprendimiento> getEmprendimiento() {
+        return emprendimiento;
+    }
+
+    public void setEmprendimiento(List<Emprendimiento> emprendimiento) {
+        this.emprendimiento = emprendimiento;
     }
 
     public String getEmail() {
