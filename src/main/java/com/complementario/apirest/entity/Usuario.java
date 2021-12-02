@@ -1,6 +1,5 @@
 package com.complementario.apirest.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -30,7 +32,7 @@ public class Usuario {
     private String apellido;
 
     @CreationTimestamp
-    private LocalDateTime fechaAlta;
+    private Date fechaAlta;
 
     @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
     private String email;
@@ -39,8 +41,12 @@ public class Usuario {
     private String ciudad;
     private String provincia;
     private String país;
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Emprendimiento> emprendimiento = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "usuario", cascade = CascadeType.ALL)
+
+    // @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Emprendimiento> emprendimientos = new ArrayList<>();
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -49,9 +55,10 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Long id, String nombre, String apellido, LocalDateTime fechaAlta,
+    
+    public Usuario(Long id, String nombre, String apellido, Date fechaAlta,
             @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$") String email,
-            String password, String ciudad, String provincia, String país, List<Emprendimiento> emprendimiento,
+            String password, String ciudad, String provincia, String país, List<Emprendimiento> emprendimientos,
             @NotNull UsuarioEnum tipo) {
         Id = id;
         this.nombre = nombre;
@@ -62,7 +69,7 @@ public class Usuario {
         this.ciudad = ciudad;
         this.provincia = provincia;
         this.país = país;
-        this.emprendimiento = emprendimiento;
+        this.emprendimientos = emprendimientos;
         this.tipo = tipo;
     }
 
@@ -90,20 +97,20 @@ public class Usuario {
         this.apellido = apellido;
     }
     
-    public LocalDateTime getFechaAlta() {
+    public Date getFechaAlta() {
         return fechaAlta;
     }
 
-    public void setFechaAlta(LocalDateTime fechaAlta) {
+    public void setFechaAlta(Date fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
 
     public List<Emprendimiento> getEmprendimiento() {
-        return emprendimiento;
+        return emprendimientos;
     }
 
-    public void setEmprendimiento(List<Emprendimiento> emprendimiento) {
-        this.emprendimiento = emprendimiento;
+    public void setEmprendimiento(List<Emprendimiento> emprendimientos) {
+        this.emprendimientos = emprendimientos;
     }
 
     public String getEmail() {
@@ -148,6 +155,11 @@ public class Usuario {
 
     public void setTipo(UsuarioEnum tipo) {
         this.tipo = tipo;
+    }
+
+    public void agregarEmprendimiento(Emprendimiento emprendimiento){
+        this.emprendimientos.add(emprendimiento);
+        emprendimiento.setUsuario(this);
     }
 
     @Override

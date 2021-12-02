@@ -2,15 +2,15 @@ package com.complementario.apirest.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "emprendimientos")
@@ -29,12 +29,10 @@ public class Emprendimiento {
     private String urlEmprendimiento; // (capturas) - puede tener 0 o varias
     private String tagsEmprendimiento; // (ejemplo: #salud, #diversion, etc. Obs: el “#” es decorado)
     private Boolean activoEmprendimiento;
-    
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="usuarioId")
-
+   
+    @JsonIgnore
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Usuario usuario;
-
     public Emprendimiento() {
     }
 
@@ -133,7 +131,6 @@ public class Emprendimiento {
     public void setActivoEmprendimiento(Boolean activoEmprendimiento) {
         this.activoEmprendimiento = activoEmprendimiento;
     }
-
 
     public Usuario getUsuario() {
         return usuario;
