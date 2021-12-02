@@ -40,8 +40,6 @@ public class EmprendimientoController {
             @RequestBody @Valid Emprendimiento emprendimiento) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
-        // emprendimiento.setUsuario(usuario);
-        // usuario.agregarEmprendimiento(emprendimiento);
         usuario.getEmprendimiento().add(emprendimiento);
         emprendimiento.setUsuario(usuario);
 
