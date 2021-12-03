@@ -86,14 +86,14 @@ public class EmprendimientoController {
 
     // Listar Emprendimientos por Tags
 
-    @RequestMapping(value = "/emprendimientos", params = "tagsEmprendimiento")
+    @GetMapping(value = "/emprendimientos", params = "tagsEmprendimiento")
     public List<Emprendimiento> emprendimientosAFiltrar(@RequestParam String tagsEmprendimiento) {
         return emprendimientoRepository.getByTagsEmprendimiento(tagsEmprendimiento);
     }
 
     // Listar Emprendimientos Inactivos
     
-    @RequestMapping(value = "/emprendimientos", params = "publicadoEmprendimiento")
+    @GetMapping(value = "/emprendimientos", params = "publicadoEmprendimiento")
     public List<Emprendimiento> emprendimientosAFiltrar(@RequestParam Boolean publicadoEmprendimiento) {
         return emprendimientoRepository.getByPublicadoEmprendimiento(publicadoEmprendimiento);
     }

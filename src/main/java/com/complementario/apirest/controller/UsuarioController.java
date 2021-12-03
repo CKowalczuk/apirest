@@ -22,69 +22,98 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+// @RequestMapping("/usuarios")
 public class UsuarioController implements Serializable {
     @JsonIgnore
     @Autowired
-    private UsuarioRepository repository;
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    public UsuarioController(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     //Alta de usuarios
 
-    @PostMapping("/usuarios")
+    @PostMapping
     public Usuario createUsuario(@RequestBody Usuario usuario) {
-        return repository.save(usuario);
+        return usuarioRepository.save(usuario);
     }
 
     //Modificar Usuarios (Apellido y Nombre)
 
-    @PutMapping("/usuarios/{id}")
+    @PutMapping("usuarios/{id}")
     public Usuario modificarUsuario(@PathVariable("id") Long id, @RequestBody @Valid Usuario usuario) {
-        Usuario usuarioExistente = repository.findById(id).get();
+        Usuario usuarioExistente = usuarioRepository.findById(id).get();
         usuarioExistente.setApellido(usuario.getApellido());
         usuarioExistente.setNombre(usuario.getNombre());
-        return repository.save(usuarioExistente);
+        return usuarioRepository.save(usuarioExistente);
     }
 
     //Borrar Usuarios (BAJA FISICA)
 
-    @DeleteMapping(value = "/usuarios/{id}")
+    @DeleteMapping(value = "usuarios/{id}")
     public void borrarUsuario(@PathVariable Long id) {
         try {
-            repository.deleteById(id);
+            usuarioRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException("No se encuentra el Usuario a Borrar");
         }
     }
 
-    //Listar todos los usuarios
-
     @GetMapping("/usuarios")
-    public @ResponseBody Iterable<Usuario> findUsuarios() {
-        return repository.findAll();
+    public @ResponseBody Iterable<Usuario> buscarUsuarios() {
+        return usuarioRepository.findAll();
     }
-    //########################## RESOLVER AMBIGUEDADES ##########################
-    //Listar usuarios por Id
 
-    @GetMapping("/usuarios/{id}")
-    public Usuario getUsuarioPorId(@PathVariable("id") Long id) {
-        return repository.findById(id).get();
+    // Listar Emprendimientos por Tags
+
+    @GetMapping(value = "/usuarios", params = "apellido")
+    public List<Usuario> usuarioBuscarApellido(@RequestParam String apellido) {
+        return usuarioRepository.getByApellido(apellido);
     }
     
-    //Listar Usuarios por ciudad
-
-    @GetMapping(value = "/usuarios/{ciudad}")
-    public List<Usuario> Ciudades(@RequestParam String ciudad) {
-
-        return repository.getByCiudad(ciudad);
+    @GetMapping(value = "/usuarios", params = "ciudad")
+    public List<Usuario> usuarioBuscarCiudad(@RequestParam String ciudad) {
+        return usuarioRepository.getByCiudad(ciudad);
     }
 
-    //Listar Usuarios por Apellido
-
-    @GetMapping(value = "/usuarios/{apellido}")
-    public List<Usuario> Apellidos(@RequestParam String apellido) {
-
-        return repository.getByApellido(apellido);
+    // Listar Emprendimientos Inactivos
+    
+    @GetMapping(value = "/usuarios", params = "id")
+    public List<Usuario> usuarioBuscarId(@RequestParam Long id) {
+        return usuarioRepository.getById(id);
     }
+    //########################## RESOLVER AMBIGUEDADES ##########################
 
+     //Listar Usuarios por ciudad
+
+    // @GetMapping(value = "usuarios/", params = "ciudad")
+    // public List<Usuario> getUsuariosPorCiudad(@RequestParam String ciudad) {
+    //     return usuarioRepository.getByCiudad(ciudad);
+    // }
+ 
+    // //Listar Usuarios por Apellido
+
+    // @GetMapping(value = "usuarios/", params = "apellido")
+    // public List<Usuario> getUsuariosPorApellido(@RequestParam String apellido) {
+    //     return usuarioRepository.getByApellido(apellido);
+    // }
+
+    // //Listar usuarios por Id
+
+    // @GetMapping(value = "usuarios/", params = "id")
+    // public Usuario getUsuariosPorId(@RequestParam Long id) {
+    //     return usuarioRepository.getById(id);
+    //     // return new ResponseEntity<>(usuarioRepository.findById(id),HttpStatus.OK);
+    // }
+
+    // @GetMapping("usuarios/")
+    // public @ResponseBody Iterable<Usuario> buscarUsuarios() {
+    //     return usuarioRepository.findAll();
+    // }
+
+    
 //########################## RESOLVER AMBIGUEDADES ##########################
 
 }

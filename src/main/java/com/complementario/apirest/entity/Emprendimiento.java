@@ -1,6 +1,6 @@
 package com.complementario.apirest.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "emprendimientos")
@@ -23,7 +26,10 @@ public class Emprendimiento {
     private String nombreEmprendimiento;
     private String descripcionEmprendimiento;
     private String contenidoEmprendimiento; // (cuerpo de la publicación)
-    private Date fechaDeCreacionEmprendimiento; // (o alta)
+    @CreationTimestamp
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate fechaDeCreacionEmprendimiento; // (o alta)
+    
     private Long objetivoEmprendimiento; // $ (recaudacion)
     private Boolean publicadoEmprendimiento; // (true o false)
     private String urlEmprendimiento; // (capturas) - puede tener 0 o varias
@@ -37,7 +43,7 @@ public class Emprendimiento {
     }
 
     public Emprendimiento(Long id, String nombreEmprendimiento, String descripcionEmprendimiento,
-            String contenidoEmprendimiento, Date fechaDeCreacionEmprendimiento, Long objetivoEmprendimiento,
+            String contenidoEmprendimiento, LocalDate fechaDeCreacionEmprendimiento, Long objetivoEmprendimiento,
             Boolean publicadoEmprendimiento, String urlEmprendimiento, String tagsEmprendimiento,
             Boolean activoEmprendimiento, Long usuarioId) {
         Id = id;
@@ -84,11 +90,11 @@ public class Emprendimiento {
         this.contenidoEmprendimiento = contenidoEmprendimiento;
     }
 
-    public Date getFechaDeCreacionEmprendimiento() {
+    public LocalDate getFechaDeCreacionEmprendimiento() {
         return fechaDeCreacionEmprendimiento;
     }
 
-    public void setFechaDeCreacionEmprendimiento(Date fechaDeCreacionEmprendimiento) {
+    public void setFechaDeCreacionEmprendimiento(LocalDate fechaDeCreacionEmprendimiento) {
         this.fechaDeCreacionEmprendimiento = fechaDeCreacionEmprendimiento;
     }
 

@@ -1,7 +1,7 @@
 package com.complementario.apirest.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,9 +31,9 @@ public class Usuario {
     private Long Id;
     private String nombre;
     private String apellido;
-
     @CreationTimestamp
-    private Date fechaAlta;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate fechaAlta;
 
     @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
     private String email;
@@ -56,7 +57,7 @@ public class Usuario {
     }
 
     
-    public Usuario(Long id, String nombre, String apellido, Date fechaAlta,
+    public Usuario(Long id, String nombre, String apellido, LocalDate fechaAlta,
             @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$") String email,
             String password, String ciudad, String provincia, String país, List<Emprendimiento> emprendimientos,
             @NotNull UsuarioEnum tipo) {
@@ -97,11 +98,11 @@ public class Usuario {
         this.apellido = apellido;
     }
     
-    public Date getFechaAlta() {
+    public LocalDate getFechaAlta() {
         return fechaAlta;
     }
 
-    public void setFechaAlta(Date fechaAlta) {
+    public void setFechaAlta(LocalDate fechaAlta) {
         this.fechaAlta = fechaAlta;
     }
 
