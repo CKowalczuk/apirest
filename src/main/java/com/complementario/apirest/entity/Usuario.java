@@ -45,22 +45,24 @@ public class Usuario {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "usuario", cascade = CascadeType.ALL)
-
-    // @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Emprendimiento> emprendimientos = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    public List<Voto> votos = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    public List<Evento> eventos = new ArrayList<>();
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private UsuarioEnum tipo;
 
-    public Usuario() {
-    }
-
-    
     public Usuario(Long id, String nombre, String apellido, LocalDate fechaAlta,
             @Email(regexp = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$") String email,
             String password, String ciudad, String provincia, String país, List<Emprendimiento> emprendimientos,
-            @NotNull UsuarioEnum tipo) {
+            List<Voto> votos, List<Evento> eventos, @NotNull UsuarioEnum tipo) {
         Id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -71,7 +73,28 @@ public class Usuario {
         this.provincia = provincia;
         this.país = país;
         this.emprendimientos = emprendimientos;
+        this.votos = votos;
+        this.eventos = eventos;
         this.tipo = tipo;
+    }
+
+    public Usuario() {
+    }
+
+    public List<Emprendimiento> getEmprendimiento() {
+        return emprendimientos;
+    }
+
+    public List<Voto> getVotos() {
+        return votos;
+    }
+
+    public void setEmprendimiento(List<Emprendimiento> emprendimientos) {
+        this.emprendimientos = emprendimientos;
+    }
+
+    public void setVotos(List<Voto> votos) {
+        this.votos = votos;
     }
 
     public Long getId() {
@@ -97,21 +120,13 @@ public class Usuario {
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-    
+
     public LocalDate getFechaAlta() {
         return fechaAlta;
     }
 
     public void setFechaAlta(LocalDate fechaAlta) {
         this.fechaAlta = fechaAlta;
-    }
-
-    public List<Emprendimiento> getEmprendimiento() {
-        return emprendimientos;
-    }
-
-    public void setEmprendimiento(List<Emprendimiento> emprendimientos) {
-        this.emprendimientos = emprendimientos;
     }
 
     public String getEmail() {
@@ -158,16 +173,35 @@ public class Usuario {
         this.tipo = tipo;
     }
 
-    public void agregarEmprendimiento(Emprendimiento emprendimiento){
+    public List<Evento> getEventos() {
+        return eventos;
+    }
+
+    public void setEventos(List<Evento> eventos) {
+        this.eventos = eventos;
+    }
+
+    public void agregarEmprendimiento(Emprendimiento emprendimiento) {
         this.emprendimientos.add(emprendimiento);
         emprendimiento.setUsuario(this);
+    }
+
+    public void agregarVoto(Voto voto) {
+        this.votos.add(voto);
+        voto.setUsuario(this);
+    }
+
+    public void agregarEvento(Evento evento) {
+        this.eventos.add(evento);
+        evento.setUsuario(this);
     }
 
     @Override
     public String toString() {
         return "Usuario [Id=" + Id + ", apellido=" + apellido + ", ciudad=" + ciudad + ", email=" + email
-                + ", fechaAlta=" + fechaAlta + ", nombre=" + nombre + ", país=" + país
-                + ", provincia=" + provincia + ", tipo=" + tipo + "]";
+                + ", emprendimientos=" + emprendimientos + ", eventos=" + eventos + ", fechaAlta=" + fechaAlta
+                + ", nombre=" + nombre + ", país=" + país + ", provincia=" + provincia + ", tipo=" + tipo + ", votos="
+                + votos + "]";
     }
 
 }

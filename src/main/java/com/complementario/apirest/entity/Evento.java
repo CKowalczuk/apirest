@@ -2,17 +2,19 @@ package com.complementario.apirest.entity;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 @Entity
+@Table(name = "eventos")
+
 public class Evento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +30,7 @@ public class Evento {
     private String suscriptorEvento; // (Emprendimientos que se registraron)
     private Long premioEvento; //: $
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="usuarioId")
-
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Usuario usuario;
     
     public Evento() {
@@ -101,6 +101,14 @@ public class Evento {
 
     public void setPremioEvento(Long premioEvento) {
         this.premioEvento = premioEvento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

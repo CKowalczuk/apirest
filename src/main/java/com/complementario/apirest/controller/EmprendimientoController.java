@@ -1,7 +1,5 @@
 package com.complementario.apirest.controller;
 
-import java.util.List;
-
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
@@ -17,9 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,7 +34,8 @@ public class EmprendimientoController {
     @PostMapping("/usuarios/{id}/emprendimientos")
     public ResponseEntity<?> crearEmprendimiento(@PathVariable("id") Long id,
             @RequestBody @Valid Emprendimiento emprendimiento) {
-        Usuario usuario = usuarioRepository.findById(id)
+                Usuario usuario = usuarioRepository
+                .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
         usuario.getEmprendimiento().add(emprendimiento);
         emprendimiento.setUsuario(usuario);
@@ -62,7 +59,7 @@ public class EmprendimientoController {
     // Modificación de Emprendimientos
 
     @PutMapping("/emprendimientos/{id}")
-    public Emprendimiento modificarEmprendimiento(@PathVariable("id") Long id,
+    public ResponseEntity<?> modificarEmprendimiento(@PathVariable("id") Long id,
             @RequestBody @Valid Emprendimiento emprendimiento) {
         Emprendimiento emprendimientoExistente = emprendimientoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Emprendimiento no encontrado"));
@@ -74,27 +71,31 @@ public class EmprendimientoController {
         emprendimientoExistente.setUrlEmprendimiento(emprendimiento.getUrlEmprendimiento());
         emprendimientoExistente.setTagsEmprendimiento(emprendimiento.getTagsEmprendimiento());
         emprendimientoExistente.setActivoEmprendimiento(emprendimiento.getActivoEmprendimiento());
-        return emprendimientoRepository.save(emprendimientoExistente);
+        return new ResponseEntity<>(emprendimientoRepository.save(emprendimientoExistente), HttpStatus.OK);
+
     }
 
     // Consulta de Todos los Emprendimientos
 
     @GetMapping("/emprendimientos")
-    public @ResponseBody Iterable<Emprendimiento> buscarEmprendimientos() {
-        return emprendimientoRepository.findAll();
+    public ResponseEntity<?> buscarEmprendimientos() {
+        return new ResponseEntity<>(emprendimientoRepository.findAll(), HttpStatus.OK);
+
     }
 
     // Listar Emprendimientos por Tags
 
     @GetMapping(value = "/emprendimientos", params = "tagsEmprendimiento")
-    public List<Emprendimiento> emprendimientosAFiltrar(@RequestParam String tagsEmprendimiento) {
-        return emprendimientoRepository.getByTagsEmprendimiento(tagsEmprendimiento);
+    public ResponseEntity<?> emprendimientosAFiltrar(@RequestParam String tagsEmprendimiento) {
+        return new ResponseEntity<>(emprendimientoRepository.getByTagsEmprendimiento(tagsEmprendimiento), HttpStatus.OK);
+
     }
 
     // Listar Emprendimientos Inactivos
     
     @GetMapping(value = "/emprendimientos", params = "publicadoEmprendimiento")
-    public List<Emprendimiento> emprendimientosAFiltrar(@RequestParam Boolean publicadoEmprendimiento) {
-        return emprendimientoRepository.getByPublicadoEmprendimiento(publicadoEmprendimiento);
+    public ResponseEntity<?> emprendimientosAFiltrar(@RequestParam Boolean publicadoEmprendimiento) {
+        return new ResponseEntity<>(emprendimientoRepository.getByPublicadoEmprendimiento(publicadoEmprendimiento), HttpStatus.OK);
+
     }
 }

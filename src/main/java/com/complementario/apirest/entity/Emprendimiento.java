@@ -23,7 +23,9 @@ public class Emprendimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+
     private String nombreEmprendimiento;
+    
     private String descripcionEmprendimiento;
     private String contenidoEmprendimiento; // (cuerpo de la publicación)
     @CreationTimestamp
