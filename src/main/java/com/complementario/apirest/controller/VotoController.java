@@ -53,10 +53,8 @@ public class VotoController {
     }
 
     // Listar los Votos de Un usuario
-
     @GetMapping(value = "/votos", params = "usuario")
     public ResponseEntity<?> votosAFiltrar(@RequestParam Usuario usuario) {
-
         return new ResponseEntity<>(votoRepository.findByUsuario(usuario), HttpStatus.OK);
     }
 }

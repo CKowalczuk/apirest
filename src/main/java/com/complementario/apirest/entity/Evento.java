@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Table(name = "eventos")
 
@@ -27,24 +28,24 @@ public class Evento {
 
     @CreationTimestamp
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private Date fechaDeCreacionEvento; //(o alta)
+    private Date fechaDeCreacionEvento; // (o alta)
 
-    @JsonFormat(pattern = "dd-MM-yyyy")   
-    private Date fechaDeCierreEvento; //(o alta)
-    
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Date fechaDeCierreEvento; // (o alta)
+
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private EventoEnum estadoEvento; //: INICIADO | ACTIVO | FINALIZADO
-    
+    private EventoEnum estadoEvento; // : INICIADO | ACTIVO | FINALIZADO
+
     private String suscriptorEvento; // (Emprendimientos que se registraron)
-    private Long premioEvento; //: $
+    private Long premioEvento; // : $
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Usuario usuario;
-    
+
     public Evento() {
     }
-    
+
     public Evento(Long id, String detalleEvento, Date fechaDeCreacionEvento, Date fechaDeCierreEvento,
             @NotNull EventoEnum estadoEvento, String suscriptorEvento, Long premioEvento) {
         this.id = id;
@@ -127,8 +128,4 @@ public class Evento {
                 + ", premioEvento=" + premioEvento + ", suscriptorEvento=" + suscriptorEvento + "]";
     }
 
-
-
-    
-    
 }

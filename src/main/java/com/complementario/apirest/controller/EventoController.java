@@ -1,6 +1,7 @@
 package com.complementario.apirest.controller;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.complementario.apirest.entity.Evento;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 @RestController
 public class EventoController {
     private UsuarioRepository usuarioRepository;
@@ -28,7 +30,7 @@ public class EventoController {
     }
 
     // Alta de Eventos
-
+    @Transactional
     @PostMapping("/usuarios/{id}/eventos")
     public ResponseEntity<?> crearEvento(@PathVariable("id") Long id,
             @RequestBody @Valid Evento evento) {
@@ -41,17 +43,18 @@ public class EventoController {
         return new ResponseEntity<>(usuarioRepository.save(usuario), HttpStatus.CREATED);
     }
 
+    // modificacion o baja de eventos
+
     @PutMapping("/eventos/{id}")
     public ResponseEntity<?> modificarEvento(@PathVariable("id") Long id,
             @RequestBody @Valid Evento evento) {
         Evento eventoExistente = eventoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
-                eventoExistente.setDetalleEvento(evento.getDetalleEvento());
-                eventoExistente.setFechaDeCreacionEvento(evento.getFechaDeCreacionEvento());
-                eventoExistente.setFechaDeCierreEvento(evento.getFechaDeCierreEvento());
-                eventoExistente.setEstadoEvento(evento.getEstadoEvento());
-                eventoExistente.setSuscriptorEvento(evento.getSuscriptorEvento());
-                eventoExistente.setPremioEvento(evento.getPremioEvento());
+        eventoExistente.setDetalleEvento(evento.getDetalleEvento());
+        eventoExistente.setFechaDeCierreEvento(evento.getFechaDeCierreEvento());
+        eventoExistente.setEstadoEvento(evento.getEstadoEvento());
+        eventoExistente.setSuscriptorEvento(evento.getSuscriptorEvento());
+        eventoExistente.setPremioEvento(evento.getPremioEvento());
 
         return new ResponseEntity<>(eventoRepository.save(eventoExistente), HttpStatus.OK);
     }
