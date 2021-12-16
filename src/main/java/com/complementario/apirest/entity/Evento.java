@@ -12,6 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Table(name = "eventos")
 
@@ -20,12 +24,17 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String detalleEvento; // (Descripción, info de auspiciantes, premio)
+
+    @CreationTimestamp
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date fechaDeCreacionEvento; //(o alta)
+
+    @JsonFormat(pattern = "dd-MM-yyyy")   
     private Date fechaDeCierreEvento; //(o alta)
     
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private EventoEnum estadoEvento; //: ABIERTO | EN CURSO | FINALIZADO
+    private EventoEnum estadoEvento; //: INICIADO | ACTIVO | FINALIZADO
     
     private String suscriptorEvento; // (Emprendimientos que se registraron)
     private Long premioEvento; //: $

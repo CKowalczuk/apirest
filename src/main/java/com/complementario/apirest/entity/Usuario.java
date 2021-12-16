@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -48,7 +49,7 @@ public class Usuario {
     public List<Emprendimiento> emprendimientos = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     public List<Voto> votos = new ArrayList<>();
 
     @JsonIgnore
@@ -200,8 +201,10 @@ public class Usuario {
     public String toString() {
         return "Usuario [Id=" + Id + ", apellido=" + apellido + ", ciudad=" + ciudad + ", email=" + email
                 + ", emprendimientos=" + emprendimientos + ", eventos=" + eventos + ", fechaAlta=" + fechaAlta
-                + ", nombre=" + nombre + ", país=" + país + ", provincia=" + provincia + ", tipo=" + tipo + ", votos="
-                + votos + "]";
+                + ", nombre=" + nombre + ", password=" + password + ", país=" + país + ", provincia=" + provincia
+                + ", tipo=" + tipo + ", votos=" + votos + "]";
     }
+
+   
 
 }

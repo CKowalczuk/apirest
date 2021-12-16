@@ -42,14 +42,14 @@ public class Voto {
     public Voto() {
     }
 
-    public Voto(Long id, VotoEnum origen, Usuario usuario, LocalDate fechaAlta, String observacion,
-            Long emprendimientoId) {
+    public Voto(Long id, VotoEnum origen, LocalDate fechaAlta, String observacion, Long emprendimientoId,
+            Usuario usuario) {
         this.id = id;
         this.origen = origen;
-        this.usuario = usuario;
         this.fechaAlta = fechaAlta;
         this.observacion = observacion;
         this.emprendimientoId = emprendimientoId;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -66,14 +66,6 @@ public class Voto {
 
     public void setOrigen(VotoEnum origen) {
         this.origen = origen;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public LocalDate getFechaAlta() {
@@ -99,5 +91,20 @@ public class Voto {
     public void setEmprendimientoId(Long emprendimientoId) {
         this.emprendimientoId = emprendimientoId;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    @Override
+    public String toString() {
+        return "Voto [emprendimientoId=" + emprendimientoId + ", fechaAlta=" + fechaAlta + ", id=" + id
+                + ", observacion=" + observacion + ", origen=" + origen + ", usuario=" + usuario + "]";
+    }
+
 
 }

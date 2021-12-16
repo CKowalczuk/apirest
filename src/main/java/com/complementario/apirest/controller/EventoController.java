@@ -27,7 +27,6 @@ public class EventoController {
         this.usuarioRepository = usuarioRepository;
     }
 
-
     // Alta de Eventos
 
     @PostMapping("/usuarios/{id}/eventos")
